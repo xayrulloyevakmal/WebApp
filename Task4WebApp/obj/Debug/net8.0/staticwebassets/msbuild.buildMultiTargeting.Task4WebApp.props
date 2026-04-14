@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../build/Task4WebApp.props" />
+</Project>

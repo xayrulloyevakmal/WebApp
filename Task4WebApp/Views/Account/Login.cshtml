@@ -1,0 +1,55 @@
+@{
+Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In - THE APP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html { height: 100%; margin: 0; }
+        .login-container { min-height: 100vh; }
+        .left-side { display: flex; flex-direction: column; justify-content: center; padding: 10%; }
+        .right-side {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background-size: cover;
+        }
+        .logo { font-size: 2rem; font-weight: bold; color: #0d6efd; margin-bottom: 2rem; letter-spacing: 2px;}
+    </style>
+</head>
+<body>
+<div class="container-fluid login-container">
+    <div class="row h-100" style="min-height: 100vh;">
+        <div class="col-md-5 left-side bg-white">
+            <div class="logo">THE APP</div>
+            <h5 class="text-muted mb-0">Start your journey</h5>
+            <h2 class="mb-4">Sign In to The App</h2>
+
+            @if (ViewBag.Error != null)
+            {
+            <div class="alert alert-danger">@ViewBag.Error</div>
+            }
+
+            <form method="post" action="/Account/Login">
+                <div class="mb-3">
+                    <label class="form-label text-muted small">E-mail</label>
+                    <input type="email" name="email" class="form-control form-control-lg" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted small">Password</label>
+                    <input type="password" name="password" class="form-control form-control-lg" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg w-100 mt-3">Sign In</button>
+            </form>
+
+            <div class="mt-4 text-muted">
+                Don't have an account? <a href="/Account/Register" class="text-primary text-decoration-none">Sign up</a>
+            </div>
+        </div>
+        <div class="col-md-7 right-side d-none d-md-block"></div>
+    </div>
+</div>
+</body>
+</html>
