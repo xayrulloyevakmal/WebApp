@@ -115,27 +115,39 @@ ViewData["Title"] = "Admin Panel";
 </div>
 
 <script>
+    
     document.getElementById('selectAll').onclick = e => {
         document.querySelectorAll('.user-checkbox').forEach(c => c.checked = e.target.checked);
     };
     
     async function applyAction(action) {
-        const ids = Array.from(document.querySelectorAll('.user-checkbox:checked')).map(c => c.value);
+        const checkboxes = document.querySelectorAll('.user-checkbox:checked');
+        const ids = Array.from(checkboxes).map(c => c.value);
+        
         if (ids.length === 0) {
             Swal.fire({ icon: 'warning', title: 'Oops...', text: 'Please select at least one user!' });
             return;
         }
 
-        const response = await fetch('/Users/BulkAction', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ action, 'ids': ids })
-        });
+        const params = new URLSearchParams();
+        params.append('action', action);
+        ids.forEach(id => params.append('ids', id)); 
 
-        if (response.ok) {
-            location.reload();
-        } else {
-            location.href = '/Account/Login';
+        try {
+            const response = await fetch('/Users/BulkAction', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params
+            });
+            
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                window.location.href = '/Account/Login';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            window.location.reload();
         }
     }
 </script>

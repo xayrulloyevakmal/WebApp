@@ -6,24 +6,38 @@ using Task4WebApp.Data;
 namespace Task4WebApp.Controllers;
 
 [Authorize]
-public class UsersController : Controller
+public class UsersController(ApplicationDbContext context) : Controller
 {
-    private readonly ApplicationDbContext _context;
-    public UsersController(ApplicationDbContext context) => _context = context;
-
     [HttpPost]
-    public async Task<IActionResult> BulkAction(List<int> ids, string action)
+    public async Task<IActionResult> BulkAction(List<int>? ids, string action)
     {
-        var users = await _context.Users.Where(u => ids.Contains(u.Id)).ToListAsync();
+        if (ids == null || ids.Count == 0)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
+        var users = await context.Users
+            .Where(u => ids.Contains(u.Id))
+            .ToListAsync();
 
         foreach (var user in users)
         {
-            if (action == "block") user.Status = "Blocked";
-            else if (action == "unblock") user.Status = "Active";
-            else if (action == "delete") _context.Users.Remove(user);
+            switch (action)
+            {
+                case "block":
+                    user.Status = "Blocked";
+                    break;
+                case "unblock":
+                    user.Status = "Active";
+                    break;
+                case "delete":
+                    context.Users.Remove(user);
+                    break;
+            }
         }
 
-        await _context.SaveChangesAsync();
-        return Ok();
+        await context.SaveChangesAsync();
+        
+        return RedirectToAction("Index", "Home");
     }
 }
